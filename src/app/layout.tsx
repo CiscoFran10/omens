@@ -1,8 +1,10 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/header';
 import { cn } from '../lib/utils';
+import { Inter } from 'next/font/google';
+import { Header } from '@/components/header';
+import { ViewTransitions } from 'next-view-transitions';
+
+import type { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,11 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={cn(inter.className, 'dark')}>
-        <Header />
-        {children}
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="pt-BR">
+        <body className={cn(inter.className, 'dark')}>
+          <Header />
+          {children}
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
