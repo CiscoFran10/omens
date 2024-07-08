@@ -5,27 +5,44 @@ import Image from 'next/image';
 import { Link } from 'next-view-transitions';
 import { useQuery } from '@tanstack/react-query';
 import { getMovies } from '@/api/get-movies';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { ClockIcon, StarIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { MoviesListSkeleton } from './movies-skeleton';
+import { Pagination } from '@/components/ui/pagination';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 
 export const MoviesList = () => {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const movieTitle = searchParams.get('title');
 
-  const { data: movies, isLoading: isLoadingMovies } = useQuery({
-    queryKey: ['movies', movieTitle],
-    queryFn: () => getMovies({ title: movieTitle }),
+  const movieTitle = searchParams.get('title');
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page - 1)
+    .parse(searchParams.get('page') ?? '1');
+
+  const { data: result, isLoading: isLoadingMovies } = useQuery({
+    queryKey: ['movies', movieTitle, pageIndex],
+    queryFn: () => getMovies({ title: movieTitle, pageIndex }),
   });
+
+  function handlePaginate(newPage: number) {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', (newPage + 1).toString());
+
+    router.push(pathname + '?' + params, { scroll: false });
+  }
 
   return (
     <section className="container px-4 py-8 md:px-6 md:py-12">
       <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-x-6 md:gap-y-8">
-        {isLoadingMovies && !movies && <MoviesListSkeleton />}
+        {isLoadingMovies && !result && <MoviesListSkeleton />}
 
-        {movies &&
-          movies.map((movie) => (
+        {result &&
+          result.movies.map((movie) => (
             <Link
               key={movie.imdbID}
               href={`/${movie.imdbID}`}
@@ -74,7 +91,16 @@ export const MoviesList = () => {
           ))}
       </div>
 
-      {movies && movies.length === 0 && (
+      {result && (
+        <Pagination
+          pageIndex={pageIndex}
+          totalCount={result.totalCount}
+          onPageChange={handlePaginate}
+          perPage={result.perPage}
+        />
+      )}
+
+      {result && result.movies.length === 0 && (
         <p className="w-full text-lg text-center text-muted-foreground">
           Não encontramos nenhum resultado para &quot;{movieTitle}
           &quot;
