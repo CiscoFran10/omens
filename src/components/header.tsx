@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Link } from 'next-view-transitions';
 import { Film as FilmIcon } from 'lucide-react';
 import { MovieSearchInput } from './movie-search-input';
@@ -15,7 +15,9 @@ export const Header = () => {
           <span>Movies</span>
         </Link>
         <div className="relative flex-1 max-w-md">
-          <MovieSearchInput />
+          <Suspense>
+            <MovieSearchInput />
+          </Suspense>
         </div>
       </div>
     </header>

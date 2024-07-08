@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import { Link } from 'next-view-transitions';
 import { Badge } from '@/components/ui/badge';
 import { CalendarIcon, ClockIcon, StarIcon } from 'lucide-react';
 import { MoviesList } from './components/movies';
+import { Suspense } from 'react';
+import { MoviesListSkeleton } from './components/movies-skeleton';
 
 const featuredMovie = {
   Title: 'Blade Runner 2049',
@@ -57,7 +57,9 @@ export default function Home() {
         </div>
       </section>
 
-      <MoviesList />
+      <Suspense fallback={<MoviesListSkeleton />}>
+        <MoviesList />
+      </Suspense>
     </main>
   );
 }
