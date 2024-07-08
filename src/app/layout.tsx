@@ -5,7 +5,7 @@ import { Header } from '@/components/header';
 import { ViewTransitions } from 'next-view-transitions';
 
 import type { Metadata } from 'next';
-
+import { ReactQueryClientProvider } from '@/lib/react-query';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -18,13 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ViewTransitions>
-      <html lang="pt-BR">
-        <body className={cn(inter.className, 'dark')}>
-          <Header />
-          {children}
-        </body>
-      </html>
-    </ViewTransitions>
+    <html lang="pt-BR">
+      <body className={cn(inter.className, 'dark')}>
+        <ReactQueryClientProvider>
+          <ViewTransitions>
+            <Header />
+            {children}
+          </ViewTransitions>
+        </ReactQueryClientProvider>
+      </body>
+    </html>
   );
 }
