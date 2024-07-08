@@ -6,6 +6,7 @@ import { ViewTransitions } from 'next-view-transitions';
 
 import type { Metadata } from 'next';
 import { ReactQueryClientProvider } from '@/lib/react-query';
+import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
           <ViewTransitions>
             <Header />
             {children}
+            <Toaster />
           </ViewTransitions>
         </ReactQueryClientProvider>
       </body>

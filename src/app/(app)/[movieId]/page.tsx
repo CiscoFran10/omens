@@ -1,8 +1,15 @@
 import { getMovieDetails } from '@/api/get-movie';
 import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { StarIcon } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
+import { StarReview } from './star-review';
 
 interface MoviePageProps {
   params: { movieId: string };
@@ -40,13 +47,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
               ))}
             </div>
 
-            <div className="flex items-center gap-2 text-yellow-500">
-              <StarIcon className="w-5 h-5" />
-              <StarIcon className="w-5 h-5" />
-              <StarIcon className="w-5 h-5" />
-              <StarIcon className="w-5 h-5" />
-              <StarIcon className="w-5 h-5" />
-            </div>
+            <StarReview movieId={movie.imdbID} />
 
             <p className="text-lg md:text-xl">{movie.Plot}</p>
 
